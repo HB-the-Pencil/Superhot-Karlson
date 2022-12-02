@@ -1266,7 +1266,7 @@ function initTextures(textures){
         [0,370,275,100],
         [0,470,305,110],
         [0,580,275,80],
-        [0,310,275,35],
+        [0,310,295,35],
         [0,671,305,75],
         [0,750,319,280]
     ]
@@ -2333,7 +2333,7 @@ let meshes=(function(out){
     out.wand.offset=[1,-1,-1.3]
     out.wand.verts=[]
     out.wand.index=[]
-    m=createBoxMesh(0,0,0,0.25,0.25,0.9,0.7,0.2,0.1,0,out.wand.verts.length/9,-10,0,0)
+    m=createBoxMesh(0,0,0,0.25,0.25,0.9,0.8,0.1,0.1,0,out.wand.verts.length/9,-10,0,0)
     out.wand.verts.push(...(m.verts))
     out.wand.index.push(...(m.index))
     bindAndSetMeshBuffers(out.wand)
@@ -2631,9 +2631,9 @@ let player=(function(out){
     
     out.yaw=out.pitch=0
     out.sensitivity=0.005
-    out.useBloom=false
+    out.useBloom=true
     out.throwHands=false
-    out.wallDash=false
+    out.wallDash=true
     out.useSSAO=false
     out.displayScreenParticles=true
     out.fov=85
@@ -4203,7 +4203,7 @@ let weapons=(function(out){
                 out.tossVel=0.01
             }
             
-            let gunTip=[0,0.125,-0.3]
+            let gunTip=[0,0,-0.3]
             MATH.rotateX(gunTip,player.weaponReload)
             vec3.add(gunTip,gunTip,out.renderOffset)
             
