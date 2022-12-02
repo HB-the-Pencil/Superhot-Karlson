@@ -8,6 +8,8 @@ Implementing all-new features, including...
 
 - Wallruns
 
+- Walldashing option
+
 - Better enemy deaths
 
 - Miscellaneous bug fixes
