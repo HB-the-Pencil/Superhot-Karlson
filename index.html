@@ -767,6 +767,8 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
     
 <!--</script>-->
 
+
+
 <script id='ssao_fsh' type='GLSLPostprocessing'>#version 300 es
     
     precision lowp float;
@@ -816,9 +818,18 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
 
 <div class='page'>
     
-    <p>Input level code here</p>
+    <p>Super.</p>
+    <p>HOT.</p>
+    <p>Super.</p>
+    <p>HOT.</p>
+    <p>Super.</p>
+    <p>HOT.</p>
+    <p>Super.</p>
+    <p>KARLSON.</p>
     <input id='levelDataInput' type='text' size='60' spellcheck='false'>
     <button id='runLevelDataCode'>Load</button>
+    
+    <p>Input level code above.</p>
     
 </div>
 
@@ -2475,53 +2486,112 @@ let player=(function(out){
         
         //@
         
-        if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.a){
-            
-            player.addSound('Epic wallrun noises',false,false,15)
-            
-            let st=3.6
-            
-            st+=e.contact.ni.dot(out.body.velocity)
-            
-            if (out.body.velocity.x < 0) {
-                out.body.velocity.x-=0.8
+        if (player.wallDash === true) {
+        
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.a){
+                
+                player.addSound('Epic wallrun noises',false,false,15)
+                
+                let st=3.6
+                
+                st+=e.contact.ni.dot(out.body.velocity)
+                
+                if (out.body.velocity.x < 0) {
+                    out.body.velocity.x-=0.8
+                }
+                if (out.body.velocity.x > 0) {
+                    out.body.velocity.x+=0.8
+                }
+                if (out.body.velocity.z < 0) {
+                    out.body.velocity.z-=0.8
+                }
+                if (out.body.velocity.z > 0) {
+                    out.body.velocity.z+=0.8
+                }
+                
+                out.body.velocity.y+=0.45
+                
             }
-            if (out.body.velocity.x > 0) {
-                out.body.velocity.x+=0.8
-            }
-            if (out.body.velocity.z < 0) {
-                out.body.velocity.z-=0.8
-            }
-            if (out.body.velocity.z > 0) {
-                out.body.velocity.z+=0.8
-            }
             
-            out.body.velocity.y+=0.45
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.d){
+                
+                player.addSound('Epic wallrun noises',false,false,15)
+                
+                let st=3.6
+                
+                st+=e.contact.ni.dot(out.body.velocity)
+                
+                if (out.body.velocity.x < 0) {
+                    out.body.velocity.x-=0.8
+                }
+                if (out.body.velocity.x > 0) {
+                    out.body.velocity.x+=0.8
+                }
+                if (out.body.velocity.z < 0) {
+                    out.body.velocity.z-=0.8
+                }
+                if (out.body.velocity.z > 0) {
+                    out.body.velocity.z+=0.8
+                }
+                
+                out.body.velocity.y+=0.45
+                
+            }
             
         }
         
-        if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.d){
+        else {
             
-            player.addSound('Epic wallrun noises',false,false,15)
-            
-            let st=3.6
-            
-            st+=e.contact.ni.dot(out.body.velocity)
-            
-            if (out.body.velocity.x < 0) {
-                out.body.velocity.x-=0.8
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.a && !user.keys[' ']){
+                
+                player.addSound('Epic wallrun noises',false,false,15)
+                
+                let st=3.6
+                
+                st+=e.contact.ni.dot(out.body.velocity)
+                
+                if (out.body.velocity.x < 0) {
+                    out.body.velocity.x-=0.8
+                }
+                if (out.body.velocity.x > 0) {
+                    out.body.velocity.x+=0.8
+                }
+                if (out.body.velocity.z < 0) {
+                    out.body.velocity.z-=0.8
+                }
+                if (out.body.velocity.z > 0) {
+                    out.body.velocity.z+=0.8
+                }
+                
+                out.body.velocity.y+=0.45
+                
             }
-            if (out.body.velocity.x > 0) {
-                out.body.velocity.x+=0.8
-            }
-            if (out.body.velocity.z < 0) {
-                out.body.velocity.z-=0.8
-            }
-            if (out.body.velocity.z > 0) {
-                out.body.velocity.z+=0.8
+            
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.d && !user.keys[' ']){
+                
+                player.addSound('Epic wallrun noises',false,false,15)
+                
+                let st=3.6
+                
+                st+=e.contact.ni.dot(out.body.velocity)
+                
+                if (out.body.velocity.x < 0) {
+                    out.body.velocity.x-=0.8
+                }
+                if (out.body.velocity.x > 0) {
+                    out.body.velocity.x+=0.8
+                }
+                if (out.body.velocity.z < 0) {
+                    out.body.velocity.z-=0.8
+                }
+                if (out.body.velocity.z > 0) {
+                    out.body.velocity.z+=0.8
+                }
+                
+                out.body.velocity.y+=0.45
+                
             }
             
-            out.body.velocity.y+=0.45
             
         }
     })
@@ -2562,6 +2632,7 @@ let player=(function(out){
     out.sensitivity=0.005
     out.useBloom=false
     out.throwHands=false
+    out.wallDash=false
     out.useSSAO=false
     out.displayScreenParticles=true
     out.fov=85
@@ -7167,7 +7238,7 @@ scenes.options=function(){
     ctx.fillText('Advanced Graphics',150,365-40)
     ctx.fillText('Ambient Occlusion',150,455-40)
     ctx.fillText('Throw Hands',450,275-40)
-    ctx.fillText('Motion Blur',450,365-40)
+    ctx.fillText('Walldash',450,365-40)
     ctx.fillText('Captions',450,455-40)
     
     ctx.strokeStyle='rgb(140,140,140)'
@@ -7224,7 +7295,8 @@ scenes.options=function(){
         ctx.closePath()
         ctx.fill()
     }
-    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;backgroundColor=(player.useBloom?[0.4,0.6,0.8,1]:[0.5,0.7,0.9,1]);player.useSSAO=false;player.lensFlare=false;}
+    //!!!
+    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;backgroundColor=(player.useBloom?[0.95,0.95,0.95,1]:[0.95,0.95,0.95,1]);player.useSSAO=false;player.lensFlare=false;}
     
     ctx.fillStyle=player.useBloom?'white':'rgb(100,100,100)'
     ctx.beginPath()
@@ -7275,7 +7347,7 @@ scenes.options=function(){
     ctx.arc(470,400-40,10,0,MATH.TWO_PI)
     ctx.closePath()
     ctx.fill()
-    if(player.useMotionBlur){
+    if(player.wallDash){
         ctx.fillStyle='rgb(0,255,0)'
         ctx.beginPath()
         ctx.arc(470,400-40,8,0,MATH.TWO_PI)
@@ -7287,7 +7359,7 @@ scenes.options=function(){
         ctx.closePath()
         ctx.fill()
     }
-    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,450,400-40,60,30)){player.useMotionBlur=!player.useMotionBlur}
+    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,450,400-40,60,30)){player.wallDash=!player.wallDash}
     
     ctx.fillStyle='white'
     ctx.beginPath()
@@ -7826,7 +7898,7 @@ scenes.play=function(){
     
     if(player.useBloom){
         
-        if(player.lensFlare&&showSky){
+        if(player.lensFlare&&!showSky){
             
             gl.readPixels(xPos,600-yPos,1,1,gl.RGBA,gl.UNSIGNED_BYTE,player.sunFlareSample)
             
@@ -7836,7 +7908,7 @@ scenes.play=function(){
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,screenIndexBuffer)
         gl.vertexAttribPointer(glCache.postprocessingScreenVerts,2,gl.FLOAT,gl.FALSE,8,0)
         
-        if(showSky){
+        if(!showSky){
             
             gl.useProgram(sunRayProgram)
             gl.bindFramebuffer(gl.FRAMEBUFFER,sunray_fb)
@@ -7901,7 +7973,7 @@ scenes.play=function(){
         ctx.drawImage(gl.canvas,0,0)
     }
     
-    if(player.lensFlare&&showSky&&player.sunFlareSample[0]===102&&player.sunFlareSample[1]===153&&player.sunFlareSample[2]===204&&player.useBloom){
+    if(player.lensFlare&&!showSky&&player.sunFlareSample[0]===102&&player.sunFlareSample[1]===153&&player.sunFlareSample[2]===204&&player.useBloom){
         
         let flareX=xPos,flareY=yPos,dirX=300-xPos,dirY=300-yPos
         
@@ -8414,7 +8486,7 @@ scenes.levelCreator=function(){
     
     if(player.useBloom){
         
-        if(player.lensFlare&&showSky){
+        if(player.lensFlare&&!showSky){
             
             gl.readPixels(xPos,600-yPos,1,1,gl.RGBA,gl.UNSIGNED_BYTE,player.sunFlareSample)
             
@@ -8424,7 +8496,7 @@ scenes.levelCreator=function(){
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,screenIndexBuffer)
         gl.vertexAttribPointer(glCache.postprocessingScreenVerts,2,gl.FLOAT,gl.FALSE,8,0)
         
-        if(showSky){
+        if(!showSky){
             
             gl.useProgram(sunRayProgram)
             gl.bindFramebuffer(gl.FRAMEBUFFER,sunray_fb)
@@ -8490,7 +8562,7 @@ scenes.levelCreator=function(){
         ctx.drawImage(gl.canvas,0,0)
     }
     
-    if(player.lensFlare&&showSky&&player.sunFlareSample[0]===102&&player.sunFlareSample[1]===153&&player.sunFlareSample[2]===204&&player.useBloom){
+    if(player.lensFlare&&!showSky&&player.sunFlareSample[0]===102&&player.sunFlareSample[1]===153&&player.sunFlareSample[2]===204&&player.useBloom){
         
         let flareX=xPos,flareY=yPos,dirX=300-xPos,dirY=300-yPos
         
