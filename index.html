@@ -1218,40 +1218,42 @@ function initTextures(textures){
     board_ctx.font='bold 30px arial'
     board_ctx.fillStyle='rgb(0,0,0)'
     
-    board_ctx.fillText('WASD to move',10,30)
-    board_ctx.fillText('SPACE to jump',10,65)
+    board_ctx.fillText('WASD TO MOVE',10,30)
+    board_ctx.fillText('SPACE TO JUMP',10,65)
     
-    board_ctx.fillText('Shoot the enemy!',10,125)
+    board_ctx.fillText('CLICK TO SHOOT',10,125)
     
-    board_ctx.fillText('Drop your weapon',10,190)
-    board_ctx.fillText('& hold down your',12,220)
-    board_ctx.fillText('mouse to move the',7,250)
-    board_ctx.fillText('boxes and spheres!',5,280)
+    board_ctx.fillText('DRAG THE BOXES',10,190)
     
-    board_ctx.fillText('SHIFT to crouch',20,340)
-    board_ctx.fillText('Hold jump while',20,400)
-    board_ctx.fillText('touching a wall',20,430)
-    board_ctx.fillText('to walljump!',50,460)
+    board_ctx.fillText(' ',12,220)
+    board_ctx.fillText(' ',7,250)
+    board_ctx.fillText(' ',5,280)
     
-    board_ctx.fillText('Use the cube to',20,500)
-    board_ctx.fillText('break the glass',20,530)
-    board_ctx.fillText('& kill the enemy',20,560)
+    board_ctx.fillText('SHIFT TO CROUCH',20,340)
     
-    board_ctx.fillText('Press E to drop',20,605)
-    board_ctx.fillText('your weapon!',35,640)
+    board_ctx.fillText('HOLD JUMP',20,400)
+    board_ctx.fillText('AND RUN',20,430)
+    board_ctx.fillText(' ',50,460)
     
-    board_ctx.fillText('OWO',90,700)
-    board_ctx.fillText('whta r u doign hre?',3,730)
+    board_ctx.fillText('BREAK THE GLASS',20,500)
+    board_ctx.fillText(' ',20,530)
+    board_ctx.fillText('KILL THE ENEMY',20,560)
     
-    board_ctx.fillText('Congratulations!',20,780)
-    board_ctx.fillText('You are now an',27,810)
-    board_ctx.fillText('EPIC GAMER!!!!',27,845)
-    board_ctx.fillText('Thx 4 playing!!!',30,900)
-    board_ctx.fillText('More games to come!',4,1012)
+    board_ctx.fillText('E TO DROP',20,605)
+    board_ctx.fillText(' ',35,640)
+    
+    board_ctx.fillText('YOU DO NOT',90,700)
+    board_ctx.fillText('BELONG HERE',90,730)
+    
+    board_ctx.fillText('WELL DONE',10,780)
+    board_ctx.fillText('LEAP OF FAITH',10,830)
+    board_ctx.fillText(' ',27,845)
+    board_ctx.fillText('DO IT',10,900)
+    board_ctx.fillText(' ',4,1012)
     board_ctx.font='bold 20px arial'
-    board_ctx.fillText('The end of a game...',40,949)
+    board_ctx.fillText('YOU HAVE NO CHOICE',10,949)
     board_ctx.font='bold 15px arial'
-    board_ctx.fillText('The begining of the best games on KA',10,969)
+    board_ctx.fillText('WE CONTROL YOU',10,969)
     
     textures.messages=gl.createTexture()
     gl.bindTexture(gl.TEXTURE_2D,textures.messages)
@@ -1259,14 +1261,14 @@ function initTextures(textures){
     
     textures.messages.bounds=[
         
-        [0,0,235,90],
+        [0,0,255,90],
         [0,95,275,50],
         [0,160,295,140],
         [0,370,275,100],
         [0,470,275,110],
         [0,580,275,80],
         [0,310,275,35],
-        [0,671,285,75],
+        [0,671,305,75],
         [0,750,319,280]
     ]
     
@@ -4239,6 +4241,8 @@ let user=(function(out){
     out.mousePressed=out.mouseClicked=false
     out.keys=out.clickedKeys={}
     
+    out.hasBeaten=false
+    
     out.update=function(){
         
         out.pressing_use=out.keys.j||out.mousePressed&&user.mouseButton===0
@@ -6623,8 +6627,15 @@ initTitleScreen()
 
 let titleScreenVignetteGradient=ctx.createRadialGradient(300,300,0,300,300,300)
 
-titleScreenVignetteGradient.addColorStop(1,'rgba(159, 219, 242,0.4)')
-titleScreenVignetteGradient.addColorStop(0,'rgba(255, 255, 255,0)')
+if (user.hasBeaten === true) {
+    titleScreenVignetteGradient.addColorStop(1,'rgba(110, 110, 110,0.4)')
+    titleScreenVignetteGradient.addColorStop(0,'rgba(255, 41, 41,0.2)')
+}
+
+else {
+    titleScreenVignetteGradient.addColorStop(1,'rgba(159, 219, 242,0.4)')
+    titleScreenVignetteGradient.addColorStop(0,'rgba(255, 255, 255,0)')
+}
 
 let levelCreatorGradient=ctx.createLinearGradient(0,0,600,0)
 
@@ -6667,7 +6678,7 @@ scenes.title=function(){
     
     mat4.fromRotation(MILK_MATRIX,f,axis)
     MILK_MATRIX[12]=0
-    MILK_MATRIX[13]=3
+    MILK_MATRIX[13]=2.5
     MILK_MATRIX[14]=-7
     
     gl.bindVertexArray(meshes.milk.VAO)
@@ -6939,7 +6950,7 @@ scenes.levelSelect=function(){
     
     mat4.fromRotation(MILK_MATRIX,f,axis)
     MILK_MATRIX[12]=0
-    MILK_MATRIX[13]=3
+    MILK_MATRIX[13]=2.5
     MILK_MATRIX[14]=-7
     
     gl.bindVertexArray(meshes.milk.VAO)
@@ -7126,7 +7137,7 @@ scenes.options=function(){
     
     mat4.fromRotation(MILK_MATRIX,f,axis)
     MILK_MATRIX[12]=0
-    MILK_MATRIX[13]=3
+    MILK_MATRIX[13]=2.5
     MILK_MATRIX[14]=-7
     
     gl.bindVertexArray(meshes.milk.VAO)
@@ -7467,6 +7478,8 @@ scenes.play=function(){
             initTitleScreen()
             currentScene='title'
             document.exitPointerLock()
+            
+            user.hasBeaten = true
             uiCanvas.onmousemove=function(e){
                 
                 user.mouseX=e.x
