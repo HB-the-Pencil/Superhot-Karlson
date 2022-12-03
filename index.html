@@ -655,7 +655,7 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
     
     void main(){
         
-        vec3 col=sunrays(1.0,0.02,1.0,1.0,50,inputTex,sunPos*0.5+0.5,pixTexCoord);
+        vec3 col=sunrays(1.0,0.02,1.0,-1.5,50,inputTex,sunPos*0.5+0.5,pixTexCoord);
         
         fragLuminace=vec4(col,1);
     }
@@ -678,7 +678,7 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
         
         if(length(col)>0.9){
             
-            fragColor=vec4(col*0.4,1);
+            fragColor=vec4(col*0.15,1);
             
         } else {
             
@@ -704,7 +704,7 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
         vec3 c=vec3(0);
         
         int blurAmount=7;
-        float blurSpread=0.00168;
+        float blurSpread=0.00075;
         
         for(int i=-blurAmount;i<=blurAmount;i++){
             
@@ -733,7 +733,7 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
         vec3 c=vec3(0);
         
         int blurAmount=7;
-        float blurSpread=0.00168;
+        float blurSpread=0.00085;
         
         for(int i=-blurAmount;i<=blurAmount;i++){
             
@@ -820,14 +820,14 @@ Fun fact 2: I actually learned how to get good at HTML by just looking at 2 prog
 
 <div class='page'>
     
-    <p>Super.</p>
-    <p>HOT.</p>
-    <p>Super.</p>
-    <p>HOT.</p>
-    <p>Super.</p>
-    <p>HOT.</p>
-    <p>Super.</p>
-    <p>KARLSON.</p>
+    <h4>Super.</h4>
+    <h4>HOT.</h4>
+    <h4>Super.</h4>
+    <h4>HOT.</h4>
+    <h4>Super.</h4>
+    <h4>HOT.</h4>
+    <h4>Super.</h4>
+    <h4>KARLSON.</h4>
     <input id='levelDataInput' type='text' size='60' spellcheck='false'>
     <button id='runLevelDataCode'>Load</button>
     
@@ -2311,10 +2311,10 @@ let meshes=(function(out){
     out.shard.verts=[]
     out.shard.index=[]
     out.shard.offset=[1.25,-1.1,-1.8]
-    m=createBoxMesh(0,0,0,0.1,0.4,0.4,0.6,0.8,0.9,out.shard.verts.length/9)
+    m=createBoxMesh(0,0,0,0.1,0.4,0.4,0.4,0.6,0.9,out.shard.verts.length/9)
     out.shard.verts.push(...(m.verts))
     out.shard.index.push(...(m.index))
-    m=createBoxMesh(0,0,-0.2,0.1,0.4*MATH.SIN_45,0.4*MATH.SIN_45,0.6,0.8,0.9,out.shard.verts.length/9,45,0,0)
+    m=createBoxMesh(0,0,-0.2,0.1,0.4*MATH.SIN_45,0.4*MATH.SIN_45,0.4,0.6,0.9,out.shard.verts.length/9,45,0,0)
     out.shard.verts.push(...(m.verts))
     out.shard.index.push(...(m.index))
     bindAndSetMeshBuffers(out.shard)
@@ -2429,7 +2429,7 @@ let player=(function(out){
     out.walkSpeed=3.5
     out.friction=0.95
     out.crouch_friction=0.35
-    out.airResistance=0.45
+    out.airResistance=0.125
     out.crouch_airResistance=0
     out.jumpPower=2.8
     out.timeMultiplier=1
@@ -2475,16 +2475,16 @@ let player=(function(out){
             
             st+=e.contact.ni.dot(out.body.velocity)
             
-            out.airResistance = 0.15
+            out.airResistance = 0.05
             
             out.body.velocity.x+=-e.contact.ni.x*st
-            out.body.velocity.y=2.1
+            out.body.velocity.y=2.6
             out.body.velocity.z+=-e.contact.ni.z*st
             
         }
         
         else {
-            out.airResistance = 0.45
+            out.airResistance = 0.125
         }
         
         //@
@@ -2495,7 +2495,7 @@ let player=(function(out){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                out.airResistance = 0.15
+                out.airResistance = 0.05
                 
                 if (out.body.velocity.x < 0) {
                     out.body.velocity.x-=0.65
@@ -2515,14 +2515,14 @@ let player=(function(out){
             }
             
             else {
-                out.airResistance = 0.45
+                out.airResistance = 0.125
             }
             
             if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                out.airResistance = 0.15
+                out.airResistance = 0.05
                 
                 if (out.body.velocity.x < 0) {
                     out.body.velocity.x-=0.65
@@ -2542,7 +2542,7 @@ let player=(function(out){
             }
             
             else {
-                out.airResistance = 0.45
+                out.airResistance = 0.125
             }
             
         }
@@ -2553,7 +2553,7 @@ let player=(function(out){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                out.airResistance = 0.15
+                out.airResistance = 0.05
                 
                 if (out.body.velocity.x < 0) {
                     out.body.velocity.x-=0.65
@@ -2573,14 +2573,14 @@ let player=(function(out){
             }
             
             else {
-                out.airResistance = 0.45
+                out.airResistance = 0.125
             }
             
             if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                out.airResistance = 0.15
+                out.airResistance = 0.05
                 
                 if (out.body.velocity.x < 0) {
                     out.body.velocity.x-=0.65
@@ -2600,7 +2600,7 @@ let player=(function(out){
             }
             
             else {
-                out.airResistance = 0.45
+                out.airResistance = 0.125
             }
             
             
@@ -2860,7 +2860,7 @@ let player=(function(out){
         
         let sdir=out.sinYaw,
             cdir=-out.cosYaw,
-            s=-out.walkSpeed*(out.crouching?(out.grounded?0.55:0.1):1)*(out.grounded?1:0.25)*dt
+            s=-out.walkSpeed*(out.crouching?(out.grounded?0.55:0.1):1)*(out.grounded?1:0.15)*dt
         
         if(user.keys.d){
             
@@ -5757,14 +5757,14 @@ class PhysicsGlass {
         
         let d=data
         
-        d.col=[0,0.5,1]
+        d.col=[0.4,0.6,0.9]
         
         this.mesh.makeMesh([d],false)
         this.mesh.setBuffers()
         this.body=new CANNON.Body({
             
             mass:0,
-            fixedRotation:true,
+            fixedRotation:false,
             shape:new CANNON.Box(new CANNON.Vec3(data.size[0]*0.5,data.size[1]*0.5,data.size[2]*0.5)),
             position:new CANNON.Vec3(...data.pos),
             quaternion:new CANNON.Quaternion(...quat.fromEuler([],data.rot[0],data.rot[1],data.rot[2])),
@@ -7316,7 +7316,7 @@ scenes.options=function(){
         ctx.fill()
     }
     //!!!
-    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;backgroundColor=(player.useBloom?[0.95,0.95,0.95,1]:[0.95,0.95,0.95,1]);player.useSSAO=false;player.lensFlare=false;}
+    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;backgroundColor=(player.useBloom?[0.8,0.8,0.8,1]:[0.95,0.95,0.95,1]);player.useSSAO=false;player.lensFlare=false;}
     
     ctx.fillStyle=player.useBloom?'white':'rgb(100,100,100)'
     ctx.beginPath()
