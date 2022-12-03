@@ -22,6 +22,8 @@ Hotswitch is added! It looks like your arm but red
 Pick it up and attack an enemy to hotswitch them!
 
 
+!!! Dat's Notes !!!
+
 
 RESTARTING THE PROGRAM DELETES THE LEVEL YOU'VE WORKED ON
 
@@ -2489,108 +2491,116 @@ let player=(function(out){
         
         if (player.wallDash === true) {
         
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.a){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.a){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                let st=3.6
-                
-                st+=e.contact.ni.dot(out.body.velocity)
+                out.airResistance = 0.15
                 
                 if (out.body.velocity.x < 0) {
-                    out.body.velocity.x-=0.8
+                    out.body.velocity.x-=0.65
                 }
                 if (out.body.velocity.x > 0) {
-                    out.body.velocity.x+=0.8
+                    out.body.velocity.x+=0.65
                 }
                 if (out.body.velocity.z < 0) {
-                    out.body.velocity.z-=0.8
+                    out.body.velocity.z-=0.65
                 }
                 if (out.body.velocity.z > 0) {
-                    out.body.velocity.z+=0.8
+                    out.body.velocity.z+=0.65
                 }
                 
-                out.body.velocity.y+=0.45
+                out.body.velocity.y+=0.35
                 
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.d){
+            else {
+                out.airResistance = 0.45
+            }
+            
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                let st=3.6
-                
-                st+=e.contact.ni.dot(out.body.velocity)
+                out.airResistance = 0.15
                 
                 if (out.body.velocity.x < 0) {
-                    out.body.velocity.x-=0.8
+                    out.body.velocity.x-=0.65
                 }
                 if (out.body.velocity.x > 0) {
-                    out.body.velocity.x+=0.8
+                    out.body.velocity.x+=0.65
                 }
                 if (out.body.velocity.z < 0) {
-                    out.body.velocity.z-=0.8
+                    out.body.velocity.z-=0.65
                 }
                 if (out.body.velocity.z > 0) {
-                    out.body.velocity.z+=0.8
+                    out.body.velocity.z+=0.65
                 }
                 
-                out.body.velocity.y+=0.45
+                out.body.velocity.y+=0.35
                 
+            }
+            
+            else {
+                out.airResistance = 0.45
             }
             
         }
         
         else {
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.a && !user.keys[' ']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.a && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                let st=3.6
-                
-                st+=e.contact.ni.dot(out.body.velocity)
+                out.airResistance = 0.15
                 
                 if (out.body.velocity.x < 0) {
-                    out.body.velocity.x-=0.8
+                    out.body.velocity.x-=0.65
                 }
                 if (out.body.velocity.x > 0) {
-                    out.body.velocity.x+=0.8
+                    out.body.velocity.x+=0.65
                 }
                 if (out.body.velocity.z < 0) {
-                    out.body.velocity.z-=0.8
+                    out.body.velocity.z-=0.65
                 }
                 if (out.body.velocity.z > 0) {
-                    out.body.velocity.z+=0.8
+                    out.body.velocity.z+=0.65
                 }
                 
-                out.body.velocity.y+=0.45
+                out.body.velocity.y+=0.35
                 
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys.d && !user.keys[' ']){
+            else {
+                out.airResistance = 0.45
+            }
+            
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
-                let st=3.6
-                
-                st+=e.contact.ni.dot(out.body.velocity)
+                out.airResistance = 0.15
                 
                 if (out.body.velocity.x < 0) {
-                    out.body.velocity.x-=0.8
+                    out.body.velocity.x-=0.65
                 }
                 if (out.body.velocity.x > 0) {
-                    out.body.velocity.x+=0.8
+                    out.body.velocity.x+=0.65
                 }
                 if (out.body.velocity.z < 0) {
-                    out.body.velocity.z-=0.8
+                    out.body.velocity.z-=0.65
                 }
                 if (out.body.velocity.z > 0) {
-                    out.body.velocity.z+=0.8
+                    out.body.velocity.z+=0.65
                 }
                 
-                out.body.velocity.y+=0.45
+                out.body.velocity.y+=0.35
                 
+            }
+            
+            else {
+                out.airResistance = 0.45
             }
             
             
