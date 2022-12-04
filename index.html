@@ -1936,14 +1936,14 @@ let meshes=(function(out){
     bindAndSetMeshBuffers(out.milk)
     
     out.bullet={}
-    v=[-0.526,0.851,0,0.526,0.851,0,-0.526,-0.851,0,0.526,-0.851,0,0,-0.526,0.851,0,0.526,0.851,0,-0.526,-0.851,0,0.526,-0.851,0.851,0,-0.526,0.851,0,0.526,-0.851,0,-0.526,-0.851,0,0.526]
+    v=[-0.226,0.551,0,0.226,0.551,0,-0.226,-0.551,0,0.226,-0.551,0,0,-0.226,0.551,0,0.226,0.551,0,-0.226,-0.551,0,0.226,-0.551,0.551,0,-0.226,0.551,0,0.226,-0.551,0,-0.226,-0.551,0,0.226]
     out.bullet.verts=[]
     out.bullet.index=[0,11,5,0,5,1,0,1,7,0,7,10,0,10,11,11,10,2,5,11,4,1,5,9,7,1,8,10,7,6,3,9,4,3,4,2,3,2,6,3,6,8,3,8,9,9,8,1,4,9,5,2,4,11,6,2,10,8,6,7,12,14,13,16,12,13,14,12,15,16,15,12]
-    let c=0.5,_s=0.8
+    let c=0.1,_s=0.4
     for(let i=0,l=v.length;i<l;i+=3){
         out.bullet.verts.push(v[i]*_s,v[i+1]*_s,v[i+2]*_s,c,c,c,v[i],v[i+1],v[i+2])
     }
-    out.bullet.verts.push(0,0,4,1,0,0,0,0,1,-0.35,0.35,0,1,0,0,-1,1,0,0.35,0.35,0,1,0,0,1,1,0,0.35,-0.35,0,1,0,0,1,-1,0,-0.35,-0.35,0,1,0,0,-1,-1,0)
+    out.bullet.verts.push(0,0,2,0.5,0,0,0,0,0.5,-0.175,0.175,0,0.5,0,0,-0.5,0.5,0,0.175,0.175,0,0.5,0,0,0.5,0.5,0,0.175,-0.175,0,0.5,0,0,0.5,-0.5,0,-0.175,-0.175,0,0.5,0,0,-0.5,-0.5,0)
     bindAndSetMeshBuffers(out.bullet)
     
     out.bomb={}
@@ -2426,7 +2426,7 @@ let player=(function(out){
     out.sunFlareSample=new Uint8Array(4)
     
     out.currentWeapon='hand'
-    out.walkSpeed=3.5
+    out.walkSpeed=4.5
     out.friction=0.95
     out.crouch_friction=0.35
     out.airResistance=0.125
@@ -2491,7 +2491,7 @@ let player=(function(out){
         
         if (player.wallDash === true) {
         
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.a){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['a']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2518,7 +2518,7 @@ let player=(function(out){
                 out.airResistance = 0.125
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['d']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2549,7 +2549,7 @@ let player=(function(out){
         
         else {
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.a && !user.keys[' ']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['a'] && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2576,7 +2576,7 @@ let player=(function(out){
                 out.airResistance = 0.125
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys.d && !user.keys[' ']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['d'] && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2611,6 +2611,8 @@ let player=(function(out){
     
     //it doesn't work anyways :/
     
+    /*
+    
     if(out.body.velocity.x > out.maxVelocity) {
         out.body.velocity.x = out.maxVelocity
     }
@@ -2629,6 +2631,8 @@ let player=(function(out){
     if(out.body.velocity.z < -out.maxVelocity) {
         out.body.velocity.z = -out.maxVelocity
     }
+    
+    */
     
     out.holdingBody=new CANNON.Body({
         
@@ -2860,7 +2864,7 @@ let player=(function(out){
         
         let sdir=out.sinYaw,
             cdir=-out.cosYaw,
-            s=-out.walkSpeed*(out.crouching?(out.grounded?0.55:0.1):1)*(out.grounded?1:0.15)*dt
+            s=-out.walkSpeed*(out.crouching?(out.grounded?0.15:0.1):1)*(out.grounded?1:0.15)*dt
         
         if(user.keys.d){
             
@@ -2899,6 +2903,14 @@ let player=(function(out){
             }
             
             if(out.crouching){
+                
+                if (out.body.velocity >= 2 || out.body.velocity <= -2) {
+                    out.crouch_friction = 0.075
+                }
+                
+                else {
+                    out.crouch_friction = 0.35
+                }
                 
                 let fx=out.body.velocity.x*out.crouch_friction,
                     fz=out.body.velocity.z*out.crouch_friction
@@ -2960,8 +2972,6 @@ let player=(function(out){
                 out.currentWeapon='hand'
             }
         }
-        
-        //uncomment this to "throw hands" XD
     }
     
     out.updatePhysicsFree=function(dt){
@@ -3023,35 +3033,47 @@ let weapons=(function(out){
         
         out.coolDown=0
         
+        out.ammo=5
+        
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
-            
-            if(dx){
+            if (out.ammo > 0) {
                 
-                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
                 
-                yaw=Math.atan2(dx*m,dz*m)
-                pitch=Math.asin(-dy*m)
+                if(dx){
+                    
+                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                    
+                    yaw=Math.atan2(dx*m,dz*m)
+                    pitch=Math.asin(-dy*m)
+                }
+                
+                physicsObjects.add(new PhysicsBullet({
+                    
+                    pos:[x,y,z],
+                    yaw:yaw,
+                    pitch:pitch,
+                    isPlayer:isPlayer,
+                    enemyFrom:enemyFrom
+                    
+                }))
+                
+                out.ammo--;
+                
+                for(let i=0;i<5;i++){
+                    
+                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                    
+                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                    
+                }
+                
             }
             
-            physicsObjects.add(new PhysicsBullet({
-                
-                pos:[x,y,z],
-                yaw:yaw,
-                pitch:pitch,
-                isPlayer:isPlayer,
-                enemyFrom:enemyFrom
-                
-            }))
-            
-            for(let i=0;i<5;i++){
-                
-                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                    c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                
-                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                
+            else {
+                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
             }
         }
         
@@ -3066,7 +3088,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0){
+            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
                 
                 out.coolDown=weapons.gun_coolDown
                 
@@ -3187,8 +3209,6 @@ let weapons=(function(out){
             
             if(user.pressing_use && out.coolDown<=0){
                 
-                player.addSound('Punch!',false,false,20)
-                
                 out.coolDown=7
                 
                 let result=new CANNON.RaycastResult(),x=player.body.position.x,y=player.body.position.y,z=player.body.position.z,r=5,
@@ -3197,6 +3217,8 @@ let weapons=(function(out){
                 
                 physicsWorld.raycastClosest(from,to,{collisionFilterMask:STATIC_PHYSICS_GROUP|DYNAMIC_PHYSICS_GROUP|ENEMY_PHYSICS_GROUP},result)
                 if(result.hasHit){
+                    
+                    player.addSound('Punch!',false,false,20)
                     
                     if(result.body.collisionFilterGroup===STATIC_PHYSICS_GROUP && result.body.fixedRotation){
                         
@@ -3295,6 +3317,8 @@ let weapons=(function(out){
     
     out.shotgun=(function(out){
         
+        out.ammo=2
+        
         out.coolDown=0
         out.trail=new Trail({
             
@@ -3305,37 +3329,46 @@ let weapons=(function(out){
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            player.addSound('Shotgun blasts',isPlayer?false:[x,y,z],false,20)
-            
-            if(dx){
+            if (out.ammo>0) {
                 
-                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                player.addSound('Shotgun blasts',isPlayer?false:[x,y,z],false,20)
                 
-                yaw=Math.atan2(dx*m,dz*m)
-                pitch=Math.asin(-dy*m)
-            }
-            
-            let V=0.15
-            
-            for(let i=0;i<5;i++){
+                out.ammo--;
                 
-                physicsObjects.add(new PhysicsBullet({
+                if(dx){
                     
-                    pos:[x,y,z],
-                    yaw:yaw+MATH.random(-V,V),
-                    pitch:pitch+MATH.random(-V,V),
-                    isPlayer:isPlayer,
-                    enemyFrom:enemyFrom
-                }))
+                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                    
+                    yaw=Math.atan2(dx*m,dz*m)
+                    pitch=Math.asin(-dy*m)
+                }
+                
+                let V=0.15
+                
+                for(let i=0;i<5;i++){
+                    
+                    physicsObjects.add(new PhysicsBullet({
+                        
+                        pos:[x,y,z],
+                        yaw:yaw+MATH.random(-V,V),
+                        pitch:pitch+MATH.random(-V,V),
+                        isPlayer:isPlayer,
+                        enemyFrom:enemyFrom
+                    }))
+                }
+                
+                for(let i=0;i<5;i++){
+                    
+                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                    
+                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                    
+                }
             }
             
-            for(let i=0;i<5;i++){
-                
-                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                    c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                
-                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                
+            else {
+                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
             }
         }
         
@@ -3343,7 +3376,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0){
+            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
                 
                 out.coolDown=weapons.shotgun_coolDown
                 player.applyRecoil(6)
@@ -4880,7 +4913,7 @@ class PhysicsBullet {
         mat4.fromRotationTranslationScale(this.matrix,q,this.pos,[0.35,0.35,1.5])
         this.dir=vec3.transformQuat([],NEG_Z,q)
         this.inv_dir=vec3.inverse([],this.dir)
-        this.speed=params.speed||(params.isPlayer?5:4.5)
+        this.speed=params.speed||(params.isPlayer?5:5)
         this.life=65
         
         let result=new CANNON.RaycastResult(),
