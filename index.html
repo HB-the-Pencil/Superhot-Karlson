@@ -2904,7 +2904,7 @@ let player=(function(out){
             
             if(out.crouching){
                 
-                if (out.body.velocity >= 2 || out.body.velocity <= -2) {
+                if (out.body.velocity.x >= 3 || out.body.velocity.x <= -3 || out.body.velocity.z >= 3 || out.body.velocity.z <= -3) {
                     out.crouch_friction = 0.075
                 }
                 
@@ -3739,44 +3739,55 @@ let weapons=(function(out){
     
     out.revolver=(function(out){
         
+        out.ammo = 6
+        
         out.coolDown=0
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            player.addSound('Revolver spins',isPlayer?false:[x,y,z],false,20)
-            
-            if(dx){
+            if (out.ammo > 0) {
                 
-                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                player.addSound('Revolver spins',isPlayer?false:[x,y,z],false,20)
                 
-                yaw=Math.atan2(dx*m,dz*m)
-                pitch=Math.asin(-dy*m)
+                out.ammo--;
+                
+                if(dx){
+                    
+                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                    
+                    yaw=Math.atan2(dx*m,dz*m)
+                    pitch=Math.asin(-dy*m)
+                }
+                
+                if(!isPlayer){
+                    
+                    yaw+=MATH.random(-0.15,0.15)
+                    pitch+=MATH.random(-0.15,0.15)
+                }
+                
+                physicsObjects.add(new PhysicsRail({
+                    
+                    pos:[x,y,z],
+                    yaw:yaw,
+                    pitch,
+                    isPlayer:isPlayer,
+                    render:false,
+                    enemyFrom:enemyFrom
+                    
+                }))
+                
+                for(let i=0;i<5;i++){
+                    
+                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                    
+                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                    
+                }
             }
             
-            if(!isPlayer){
-                
-                yaw+=MATH.random(-0.15,0.15)
-                pitch+=MATH.random(-0.15,0.15)
-            }
-            
-            physicsObjects.add(new PhysicsRail({
-                
-                pos:[x,y,z],
-                yaw:yaw,
-                pitch,
-                isPlayer:isPlayer,
-                render:false,
-                enemyFrom:enemyFrom
-                
-            }))
-            
-            for(let i=0;i<5;i++){
-                
-                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                    c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                
-                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                
+            else {
+                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
             }
         }
         
@@ -3791,7 +3802,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0){
+            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
                 
                 out.coolDown=weapons.revolver_coolDown
                 
@@ -5797,7 +5808,7 @@ class PhysicsGlass {
         this.body=new CANNON.Body({
             
             mass:0,
-            fixedRotation:false,
+            fixedRotation:true,
             shape:new CANNON.Box(new CANNON.Vec3(data.size[0]*0.5,data.size[1]*0.5,data.size[2]*0.5)),
             position:new CANNON.Vec3(...data.pos),
             quaternion:new CANNON.Quaternion(...quat.fromEuler([],data.rot[0],data.rot[1],data.rot[2])),
