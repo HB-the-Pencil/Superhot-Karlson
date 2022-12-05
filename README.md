@@ -10,6 +10,8 @@ Implementing all-new features, including...
 
 - Walldashing option
 
+- Sliding
+
 - Better enemy deaths
 
 - Miscellaneous bug fixes
@@ -17,6 +19,8 @@ Implementing all-new features, including...
 - New hand model
 
 - Hotswitch
+
+- Ammo (a bit broken rn)
 
 - New color schemes
 
