@@ -2447,6 +2447,10 @@ let player=(function(out){
     out.crouching=false
     out.pickUpCoolDown=0
     
+    out.gunAmm
+    out.shotgunAmmo
+    out.revolverAmmo
+    
     out.playerShape=new CANNON.Box(new CANNON.Vec3(out.radius,out._height,out.radius))
     
     out.body=new CANNON.Body({
@@ -2972,7 +2976,7 @@ let player=(function(out){
             if(player.currentWeapon==='reverse' && weapons.reverse.active===false || player.currentWeapon!=='reverse' && player.throwHands===true){
                 
                 out.pickUpCoolDown=0.2
-                physicsObjects.add(new PhysicsWeapon({pos:[out.body.position.x+out.lookDir[0]*2,out.body.position.y+out.height+out.lookDir[1]*2,out.body.position.z+out.lookDir[2]*2],type:out.currentWeapon,vel:out.lookDir,fromPlayer:true}))
+                physicsObjects.add(new PhysicsWeapon({pos:[out.body.position.x+out.lookDir[0]*2,out.body.position.y+out.height+out.lookDir[1]*2,out.body.position.z+out.lookDir[2]*2],type:out.currentWeapon,vel:out.lookDir,fromPlayer:true,ammo:out.ammo}))
                 out.currentWeapon='hand'
             }
         }
@@ -3035,14 +3039,55 @@ let weapons=(function(out){
     
     out.gun=(function(out){
         
-        out.coolDown=0
+        player.gunAmmo=player.gunAmmo||5
         
-        out.ammo=5
+        out.coolDown=0
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (out.ammo > 0) {
+            if (isPlayer) {
                 
+                if (player.gunAmmo > 0) {
+                    
+                    player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
+                    
+                    if(dx){
+                        
+                        let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
+                        
+                        yaw=Math.atan2(dx*m,dz*m)
+                        pitch=Math.asin(-dy*m)
+                    }
+                    
+                    physicsObjects.add(new PhysicsBullet({
+                        
+                        pos:[x,y,z],
+                        yaw:yaw,
+                        pitch:pitch,
+                        isPlayer:isPlayer,
+                        enemyFrom:enemyFrom
+                        
+                    }))
+                    
+                    player.gunAmmo--;
+                    
+                    for(let i=0;i<5;i++){
+                        
+                        let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                            c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                        
+                        ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                        
+                    }
+                    
+                }
+                
+                else {
+                    player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
+                }
+            }
+            
+            else {
                 player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
                 
                 if(dx){
@@ -3063,21 +3108,16 @@ let weapons=(function(out){
                     
                 }))
                 
-                out.ammo--;
+                
                 
                 for(let i=0;i<5;i++){
                     
                     let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                    c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
                     
                     ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
                     
                 }
-                
-            }
-            
-            else {
-                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
             }
         }
         
@@ -3092,7 +3132,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
+            if(user.pressing_use && out.coolDown<=0 && player.gunAmmo > 0){
                 
                 out.coolDown=weapons.gun_coolDown
                 
@@ -3321,7 +3361,7 @@ let weapons=(function(out){
     
     out.shotgun=(function(out){
         
-        out.ammo=2
+        player.shotgunAmmo=player.shotgunAmmo||2
         
         out.coolDown=0
         out.trail=new Trail({
@@ -3333,11 +3373,11 @@ let weapons=(function(out){
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (out.ammo>0) {
+            if (player.shotgunAmmo>0) {
                 
                 player.addSound('Shotgun blasts',isPlayer?false:[x,y,z],false,20)
                 
-                out.ammo--;
+                player.shotgunAmmo--;
                 
                 if(dx){
                     
@@ -3380,7 +3420,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
+            if(user.pressing_use && out.coolDown<=0 && player.shotgunAmmo > 0){
                 
                 out.coolDown=weapons.shotgun_coolDown
                 player.applyRecoil(6)
@@ -3743,17 +3783,17 @@ let weapons=(function(out){
     
     out.revolver=(function(out){
         
-        out.ammo = 6
+        player.revolverAmmo=player.revolverAmmo||6
         
         out.coolDown=0
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (out.ammo > 0) {
+            if (player.revolverAmmo > 0) {
                 
                 player.addSound('Revolver spins',isPlayer?false:[x,y,z],false,20)
                 
-                out.ammo--;
+                player.revolverAmmo--;
                 
                 if(dx){
                     
@@ -3806,7 +3846,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && out.ammo > 0){
+            if(user.pressing_use && out.coolDown<=0 && player.revolverAmmo > 0){
                 
                 out.coolDown=weapons.revolver_coolDown
                 
@@ -4334,6 +4374,9 @@ let user=(function(out){
             
             setLevel(currentLevel)
             player.dead=false
+            player.gunAmmo=5
+            player.shotgunAmmo=2
+            player.revolverAmmo=6
             currentScene='play'
             uiCanvas.requestPointerLock()
             ctx.strokeStyle='black'
@@ -4928,7 +4971,7 @@ class PhysicsBullet {
         mat4.fromRotationTranslationScale(this.matrix,q,this.pos,[0.35,0.35,1.5])
         this.dir=vec3.transformQuat([],NEG_Z,q)
         this.inv_dir=vec3.inverse([],this.dir)
-        this.speed=params.speed||(params.isPlayer?5:5)
+        this.speed=params.speed||(params.isPlayer?4:4)
         this.life=65
         
         let result=new CANNON.RaycastResult(),
@@ -5036,6 +5079,8 @@ class PhysicsWeapon {
         
         //used for picking up stuff
         this.aWeapon=1
+        
+        this.ammo=params.ammo
         
         this.type=params.type
         this.mesh=meshes[this.type]
@@ -7673,6 +7718,9 @@ scenes.play=function(){
                         user.mouseButton=e.button
                     }
                     player.dead=false
+                    player.gunAmmo=5
+                    player.shotgunAmmo=2
+                    player.revolverAmmo=6
                     player.currentWeapon='hand'
                 }
             }
@@ -7807,6 +7855,9 @@ scenes.play=function(){
                     user.mouseButton=e.button
                 }
                 player.dead=false
+                player.gunAmmo=5
+                player.shotgunAmmo=2
+                player.revolverAmmo=6
                 player.currentWeapon='hand'
             }
         }
@@ -8125,6 +8176,9 @@ scenes.play=function(){
                 
                 setLevel(currentLevel)
                 player.dead=false
+                player.gunAmmo=5
+                player.shotgunAmmo=2
+                player.revolverAmmo=6
                 currentScene='play'
                 uiCanvas.requestPointerLock()
                 ctx.strokeStyle='black'
@@ -8156,6 +8210,9 @@ scenes.play=function(){
                     user.mouseButton=e.button
                 }
                 player.dead=false
+                player.gunAmmo=5
+                player.shotgunAmmo=2
+                player.revolverAmmo=6
                 player.currentWeapon='hand'
             }
         }
