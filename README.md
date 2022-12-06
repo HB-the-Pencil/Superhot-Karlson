@@ -1,5 +1,7 @@
 # Superhot-Karlson
 
+[Project link](https://hb-the-pencil.github.io/Superhot-Karlson/)
+
 ### A mod of Dat's [Karlson](https://dddatt.github.io/Karlson-3D/main.html).
 
 ### Made on an older version, so it's missing some features (like the timer).
