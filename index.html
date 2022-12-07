@@ -1979,22 +1979,22 @@ let meshes=(function(out){
     m=icosphere(1)
     for(let i=0,l=m.verts.length;i<l;i+=3){
         
-        out.enemy.verts.push(m.verts[i]*0.5,m.verts[i+1]*0.5+1.75,m.verts[i+2]*0.5,r,g,b,m.verts[i],m.verts[i+1],m.verts[i+2])
+        out.enemy.verts.push(m.verts[i]*0.5,m.verts[i+1]*0.5+1.75,m.verts[i+2]*0.5,0.7,0.2,0.1,m.verts[i],m.verts[i+1],m.verts[i+2])
     }
     out.enemy.index=[...m.index]
-    m=createBoxMesh(0,0.5,0,1.2,1.5,0.5,r,g,b,out.enemy.verts.length/9)
+    m=createBoxMesh(0,0.5,0,1.2,1.5,0.5,0.7,0.2,0.1,out.enemy.verts.length/9)
     out.enemy.verts.push(...(m.verts))
     out.enemy.index.push(...(m.index))
-    m=createBoxMesh(-0.5,0.9,-0.5,1.5,0.4,0.4,r,g,b,out.enemy.verts.length/9,0,70,0)
+    m=createBoxMesh(-0.5,0.9,-0.5,1.5,0.4,0.4,0.7,0.2,0.1,out.enemy.verts.length/9,0,70,0)
     out.enemy.verts.push(...(m.verts))
     out.enemy.index.push(...(m.index))
-    m=createBoxMesh(0.5,0.9,-0.5,1.5,0.4,0.4,r,g,b,out.enemy.verts.length/9,0,-70,0)
+    m=createBoxMesh(0.5,0.9,-0.5,1.5,0.4,0.4,0.7,0.2,0.1,out.enemy.verts.length/9,0,-70,0)
     out.enemy.verts.push(...(m.verts))
     out.enemy.index.push(...(m.index))
-    m=createBoxMesh(-0.4,-0.7,0,0.4,1.5,0.4,r,g,b,out.enemy.verts.length/9,0,-25,0)
+    m=createBoxMesh(-0.4,-0.7,0,0.4,1.5,0.4,0.7,0.2,0.1,out.enemy.verts.length/9,0,-25,0)
     out.enemy.verts.push(...(m.verts))
     out.enemy.index.push(...(m.index))
-    m=createBoxMesh(0.4,-0.7,0,0.4,1.5,0.4,r,g,b,out.enemy.verts.length/9,0,25,0)
+    m=createBoxMesh(0.4,-0.7,0,0.4,1.5,0.4,0.7,0.2,0.1,out.enemy.verts.length/9,0,25,0)
     out.enemy.verts.push(...(m.verts))
     out.enemy.index.push(...(m.index))
     bindAndSetMeshBuffers(out.enemy)
@@ -2006,22 +2006,22 @@ let meshes=(function(out){
     m=icosphere(1)
     for(let i=0,l=m.verts.length;i<l;i+=3){
         
-        out.enemy_running.verts.push(m.verts[i]*0.5,m.verts[i+1]*0.5+1.25,m.verts[i+2]*0.5-0.75,r,g,b,m.verts[i],m.verts[i+1],m.verts[i+2])
+        out.enemy_running.verts.push(m.verts[i]*0.5,m.verts[i+1]*0.5+1.25,m.verts[i+2]*0.5-0.75,0.7,0.2,0.1,m.verts[i],m.verts[i+1],m.verts[i+2])
     }
     out.enemy_running.index=[...m.index]
-    m=createBoxMesh(0,0.5,0,1.2,1.5,0.5,r,g,b,out.enemy_running.verts.length/9,-55,0,0)
+    m=createBoxMesh(0,0.5,0,1.2,1.5,0.5,0.7,0.2,0.1,out.enemy_running.verts.length/9,-55,0,0)
     out.enemy_running.verts.push(...(m.verts))
     out.enemy_running.index.push(...(m.index))
-    m=createBoxMesh(-0.75,1.1,0.5,0.4,0.4,1.5,r,g,b,out.enemy_running.verts.length/9,-30,-20,0)
+    m=createBoxMesh(-0.75,1.1,0.5,0.4,0.4,1.5,0.7,0.2,0.1,out.enemy_running.verts.length/9,-30,-20,0)
     out.enemy_running.verts.push(...(m.verts))
     out.enemy_running.index.push(...(m.index))
-    m=createBoxMesh(0.75,1.1,0.5,0.4,0.4,1.5,r,g,b,out.enemy_running.verts.length/9,-30,20,0)
+    m=createBoxMesh(0.75,1.1,0.5,0.4,0.4,1.5,0.7,0.2,0.1,out.enemy_running.verts.length/9,-30,20,0)
     out.enemy_running.verts.push(...(m.verts))
     out.enemy_running.index.push(...(m.index))
-    m=createBoxMesh(-0.4,-0.7,0.8,0.4,1.5,0.4,r,g,b,out.enemy_running.verts.length/9,-30,0,0)
+    m=createBoxMesh(-0.4,-0.7,0.8,0.4,1.5,0.4,0.7,0.2,0.1,out.enemy_running.verts.length/9,-30,0,0)
     out.enemy_running.verts.push(...(m.verts))
     out.enemy_running.index.push(...(m.index))
-    m=createBoxMesh(0.4,-0.7,0.8,0.4,1.5,0.4,r,g,b,out.enemy_running.verts.length/9,-30,0,0)
+    m=createBoxMesh(0.4,-0.7,0.8,0.4,1.5,0.4,0.7,0.2,0.1,out.enemy_running.verts.length/9,-30,0,0)
     out.enemy_running.verts.push(...(m.verts))
     out.enemy_running.index.push(...(m.index))
     bindAndSetMeshBuffers(out.enemy_running)
@@ -5104,7 +5104,7 @@ class PhysicsEnemy {
         
         physicsObjects.add(new PhysicsWeapon({pos:[this.body.position.x+this.toPlayerDir[0]*2,this.body.position.y,this.body.position.z+this.toPlayerDir[2]*2],type:this.weapon}))
         
-        physicsObjects.createRagdoll({pos:[this.body.position.x,this.body.position.y+2,this.body.position.z]})
+        physicsObjects.createRagdoll({pos:[this.body.position.x,this.body.position.y+1,this.body.position.z]})
         
         physicsWorld.removeBody(this.body)
         physicsObjects.objects.splice(index,1)
@@ -9145,7 +9145,7 @@ scenes.levelCreator=function(){
             
             let r=5,p=[player.body.position.x+player.lookDir[0]*r,player.body.position.y+player.height+player.lookDir[1]*r,player.body.position.z+player.lookDir[2]*r]
             levelMade.selectedPart=levelMade.data.length
-            levelMade.data.push({pos:p,rot:[0,0,0],size:[0.2,0.2,0.2],col:[0.1,0.2,0.4],useTex:false,partInfo:{instance:'weapon',type:'gun',pos:p.slice()}})
+            levelMade.data.push({pos:p,rot:[0,0,0],size:[0.2,0.2,0.2],col:[0.1,0.2,0.3],useTex:false,partInfo:{instance:'weapon',type:'gun',pos:p.slice()}})
             levelMade.selectGlow=2
             return
         }
@@ -9172,7 +9172,7 @@ scenes.levelCreator=function(){
             
             let r=5,p=[player.body.position.x+player.lookDir[0]*r,player.body.position.y+player.height+player.lookDir[1]*r,player.body.position.z+player.lookDir[2]*r]
             levelMade.selectedPart=levelMade.data.length
-            levelMade.data.push({pos:p,size:[0.75,1.325,0.75],col:[0.8,0.3,0.2],rot:[0,0,0],useTex:false,partInfo:{instance:'enemy',pos:p.slice(),weapon:'gun'}})
+            levelMade.data.push({pos:p,size:[0.75,1.325,0.75],col:[0.7,0.2,0.1],rot:[0,0,0],useTex:false,partInfo:{instance:'enemy',pos:p.slice(),weapon:'gun'}})
             levelMade.selectGlow=2
             return
         }
