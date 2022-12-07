@@ -2447,10 +2447,6 @@ let player=(function(out){
     out.crouching=false
     out.pickUpCoolDown=0
     
-    out.gunAmm
-    out.shotgunAmmo
-    out.revolverAmmo
-    
     out.playerShape=new CANNON.Box(new CANNON.Vec3(out.radius,out._height,out.radius))
     
     out.body=new CANNON.Body({
@@ -2976,7 +2972,7 @@ let player=(function(out){
             if(player.currentWeapon==='reverse' && weapons.reverse.active===false || player.currentWeapon!=='reverse' && player.throwHands===true){
                 
                 out.pickUpCoolDown=0.2
-                physicsObjects.add(new PhysicsWeapon({pos:[out.body.position.x+out.lookDir[0]*2,out.body.position.y+out.height+out.lookDir[1]*2,out.body.position.z+out.lookDir[2]*2],type:out.currentWeapon,vel:out.lookDir,fromPlayer:true,ammo:out.ammo}))
+                physicsObjects.add(new PhysicsWeapon({pos:[out.body.position.x+out.lookDir[0]*2,out.body.position.y+out.height+out.lookDir[1]*2,out.body.position.z+out.lookDir[2]*2],type:out.currentWeapon,vel:out.lookDir,fromPlayer:true}))
                 out.currentWeapon='hand'
             }
         }
@@ -3039,86 +3035,40 @@ let weapons=(function(out){
     
     out.gun=(function(out){
         
-        player.gunAmmo=player.gunAmmo||5
-        
         out.coolDown=0
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (isPlayer) {
+            player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
+            
+            if(dx){
                 
-                if (player.gunAmmo > 0) {
-                    
-                    player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
-                    
-                    if(dx){
-                        
-                        let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
-                        
-                        yaw=Math.atan2(dx*m,dz*m)
-                        pitch=Math.asin(-dy*m)
-                    }
-                    
-                    physicsObjects.add(new PhysicsBullet({
-                        
-                        pos:[x,y,z],
-                        yaw:yaw,
-                        pitch:pitch,
-                        isPlayer:isPlayer,
-                        enemyFrom:enemyFrom
-                        
-                    }))
-                    
-                    player.gunAmmo--;
-                    
-                    for(let i=0;i<5;i++){
-                        
-                        let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                            c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                        
-                        ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                        
-                    }
-                    
-                }
+                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
                 
-                else {
-                    player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
-                }
+                yaw=Math.atan2(dx*m,dz*m)
+                pitch=Math.asin(-dy*m)
             }
             
-            else {
-                player.addSound('Gun fires',isPlayer?false:[x,y,z],false,20)
+            physicsObjects.add(new PhysicsBullet({
                 
-                if(dx){
-                    
-                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
-                    
-                    yaw=Math.atan2(dx*m,dz*m)
-                    pitch=Math.asin(-dy*m)
-                }
+                pos:[x,y,z],
+                yaw:yaw,
+                pitch:pitch,
+                isPlayer:isPlayer,
+                enemyFrom:enemyFrom
                 
-                physicsObjects.add(new PhysicsBullet({
-                    
-                    pos:[x,y,z],
-                    yaw:yaw,
-                    pitch:pitch,
-                    isPlayer:isPlayer,
-                    enemyFrom:enemyFrom
-                    
-                }))
+            }))
+            
                 
+            for(let i=0;i<5;i++){
                 
+                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
                 
-                for(let i=0;i<5;i++){
-                    
-                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                    c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                    
-                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                    
-                }
+                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                
             }
+                
         }
         
         out.trail=new Trail({
@@ -3132,7 +3082,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && player.gunAmmo > 0){
+            if(user.pressing_use && out.coolDown<=0){
                 
                 out.coolDown=weapons.gun_coolDown
                 
@@ -3361,8 +3311,6 @@ let weapons=(function(out){
     
     out.shotgun=(function(out){
         
-        player.shotgunAmmo=player.shotgunAmmo||2
-        
         out.coolDown=0
         out.trail=new Trail({
             
@@ -3373,46 +3321,38 @@ let weapons=(function(out){
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (player.shotgunAmmo>0) {
+            
+            player.addSound('Shotgun blasts',isPlayer?false:[x,y,z],false,20)
+            
+            if(dx){
                 
-                player.addSound('Shotgun blasts',isPlayer?false:[x,y,z],false,20)
+                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
                 
-                player.shotgunAmmo--;
+                yaw=Math.atan2(dx*m,dz*m)
+                pitch=Math.asin(-dy*m)
+            }
                 
-                if(dx){
-                    
-                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
-                    
-                    yaw=Math.atan2(dx*m,dz*m)
-                    pitch=Math.asin(-dy*m)
-                }
+            let V=0.15
+            
+            for(let i=0;i<5;i++){
                 
-                let V=0.15
-                
-                for(let i=0;i<5;i++){
+                physicsObjects.add(new PhysicsBullet({
                     
-                    physicsObjects.add(new PhysicsBullet({
-                        
-                        pos:[x,y,z],
-                        yaw:yaw+MATH.random(-V,V),
-                        pitch:pitch+MATH.random(-V,V),
-                        isPlayer:isPlayer,
-                        enemyFrom:enemyFrom
-                    }))
-                }
-                
-                for(let i=0;i<5;i++){
-                    
-                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                    
-                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                    
-                }
+                    pos:[x,y,z],
+                    yaw:yaw+MATH.random(-V,V),
+                    pitch:pitch+MATH.random(-V,V),
+                    isPlayer:isPlayer,
+                    enemyFrom:enemyFrom
+                }))
             }
             
-            else {
-                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
+            for(let i=0;i<5;i++){
+                
+                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                
+                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                
             }
         }
         
@@ -3420,7 +3360,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && player.shotgunAmmo > 0){
+            if(user.pressing_use && out.coolDown<=0){
                 
                 out.coolDown=weapons.shotgun_coolDown
                 player.applyRecoil(6)
@@ -3540,8 +3480,8 @@ let weapons=(function(out){
             
             if(!isPlayer){
                 
-                incx=MATH.random(-0.075,0.075)
-                incy=MATH.random(-0.075,0.075)
+                incx=MATH.random(-0.025,0.025)
+                incy=MATH.random(-0.025,0.025)
                 
             } else {
                 
@@ -3598,12 +3538,6 @@ let weapons=(function(out){
                 
                 yaw=Math.atan2(dx*m,dz*m)
                 pitch=Math.asin(-dy*m)
-            }
-            
-            if(!isPlayer){
-                
-                yaw+=MATH.random(-0.15,0.15)
-                pitch+=MATH.random(-0.15,0.15)
             }
             
             physicsObjects.add(new PhysicsRail({
@@ -3783,56 +3717,42 @@ let weapons=(function(out){
     
     out.revolver=(function(out){
         
-        player.revolverAmmo=player.revolverAmmo||6
-        
         out.coolDown=0
         
         out.shoot=function(x,y,z,yaw,pitch,dx,dy,dz,isPlayer,enemyFrom){
             
-            if (player.revolverAmmo > 0) {
+            player.addSound('Revolver spins',isPlayer?false:[x,y,z],false,20)
+            
+            
+            
+            if(dx){
                 
-                player.addSound('Revolver spins',isPlayer?false:[x,y,z],false,20)
+                let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
                 
-                player.revolverAmmo--;
+                yaw=Math.atan2(dx*m,dz*m)
+                pitch=Math.asin(-dy*m)
+            }
                 
-                if(dx){
-                    
-                    let m=-1/Math.sqrt(dx*dx+dy*dy+dz*dz)
-                    
-                    yaw=Math.atan2(dx*m,dz*m)
-                    pitch=Math.asin(-dy*m)
-                }
+            physicsObjects.add(new PhysicsRail({
                 
-                if(!isPlayer){
-                    
-                    yaw+=MATH.random(-0.15,0.15)
-                    pitch+=MATH.random(-0.15,0.15)
-                }
+                pos:[x,y,z],
+                yaw:yaw,
+                pitch,
+                isPlayer:isPlayer,
+                render:false,
+                enemyFrom:enemyFrom
                 
-                physicsObjects.add(new PhysicsRail({
-                    
-                    pos:[x,y,z],
-                    yaw:yaw,
-                    pitch,
-                    isPlayer:isPlayer,
-                    render:false,
-                    enemyFrom:enemyFrom
-                    
-                }))
+            }))
+            
+            for(let i=0;i<5;i++){
                 
-                for(let i=0;i<5;i++){
-                    
-                    let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
-                        c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
-                    
-                    ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
-                    
-                }
+                let _c=~~(Math.random()*7),__c=MATH.random(0.2,0.5),
+                c=_c?[MATH.random(0.8,1),MATH.random(0.15,0.9),0.05]:[__c,__c,__c]
+                
+                ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.4,0.4),vy:MATH.random(-0.4,0.4),vz:MATH.random(-0.4,0.4),grav:0,size:MATH.random(40,150),col:c,life:MATH.random(15,35)})
+                
             }
             
-            else {
-                player.addSound('Out of ammo!',isPlayer?false:[x,y,z],false,20)
-            }
         }
         
         out.trail=new Trail({
@@ -3846,7 +3766,7 @@ let weapons=(function(out){
             
             out.coolDown-=dt
             
-            if(user.pressing_use && out.coolDown<=0 && player.revolverAmmo > 0){
+            if(user.pressing_use && out.coolDown<=0){
                 
                 out.coolDown=weapons.revolver_coolDown
                 
@@ -3886,12 +3806,6 @@ let weapons=(function(out){
                 
                 yaw=Math.atan2(dx*m,dz*m)
                 pitch=Math.asin(-dy*m)
-            }
-            
-            if(!isPlayer){
-                
-                yaw+=MATH.random(-0.1,0.1)
-                pitch+=MATH.random(-0.1,0.1)
             }
             
             physicsObjects.add(new PhysicsRail({
@@ -4272,12 +4186,6 @@ let weapons=(function(out){
                 pitch=Math.asin(-dy*m)
             }
             
-            if(!isPlayer){
-                
-                yaw+=MATH.random(-0.175,0.175)
-                pitch+=MATH.random(-0.175,0.175)
-            }
-            
             physicsObjects.add(new PhysicsBeam({
                 
                 pos:[x,y,z],
@@ -4374,9 +4282,6 @@ let user=(function(out){
             
             setLevel(currentLevel)
             player.dead=false
-            player.gunAmmo=5
-            player.shotgunAmmo=2
-            player.revolverAmmo=6
             currentScene='play'
             uiCanvas.requestPointerLock()
             ctx.strokeStyle='black'
@@ -4656,7 +4561,7 @@ let physicsObjects={
         let pos=params.pos,
             scale=params.scale||1,
             angle=Math.PI*0.275,
-            twistAngle=Math.PI*0.01,
+            twistAngle=Math.PI,
             headRad=0.4*scale,
             torsoSize=[0.8*scale,1.2*scale,0.4*scale],
             head=physicsObjects.add(new PhysicsSphere({pos:pos,radius:headRad})),
@@ -5079,8 +4984,6 @@ class PhysicsWeapon {
         
         //used for picking up stuff
         this.aWeapon=1
-        
-        this.ammo=params.ammo
         
         this.type=params.type
         this.mesh=meshes[this.type]
@@ -5886,26 +5789,26 @@ class PhysicsGlass {
         let chance=Math.random()
         //player.timeTimer=5
         
-        if(chance<0.375){
+        if(chance<0.775){
             
-            for(let i=0;i<2;i++){
+            for(let i=0;i<MATH.random(2,50);i++){
                 
-                physicsObjects.add(new PhysicsWeapon({pos:[this.body.position.x+MATH.random(-1,1),this.body.position.y+MATH.random(-1,1),this.body.position.z+MATH.random(-1,1)],type:'shard',vel:[MATH.random(-0.4,0.4),MATH.random(-0.4,0.4),MATH.random(-0.4,0.4)],fromPlayer:true}))
+                physicsObjects.add(new PhysicsWeapon({pos:[this.body.position.x+MATH.random(-3,3),this.body.position.y+MATH.random(-3,3),this.body.position.z+MATH.random(-3,3)],type:'shard',vel:[MATH.random(-0.4,0.4),MATH.random(-0.4,0.4),MATH.random(-0.4,0.4)],fromPlayer:true}))
             
             }
             
-        } else if(chance<0.75){
+        } else if(chance<0.95){
             
-            physicsObjects.add(new PhysicsWeapon({pos:[this.body.position.x+MATH.random(-1,1),this.body.position.y+MATH.random(-1,1),this.body.position.z+MATH.random(-1,1)],type:'shard',vel:[MATH.random(-0.4,0.4),MATH.random(-0.4,0.4),MATH.random(-0.4,0.4)],fromPlayer:true}))
+            physicsObjects.add(new PhysicsWeapon({pos:[this.body.position.x+MATH.random(-3,3),this.body.position.y+MATH.random(-3,3),this.body.position.z+MATH.random(-3,3)],type:'shard',vel:[MATH.random(-0.4,0.4),MATH.random(-0.4,0.4),MATH.random(-0.4,0.4)],fromPlayer:true}))
         }
         
-        for(let j=0;j<30;j++){
+        for(let j=0;j<40;j++){
             
             let x=this.body.position.x,
                 y=this.body.position.y,
                 z=this.body.position.z
                 
-            ParticleRenderer.add({x:x,y:y,z:z,vx:MATH.random(-0.5,0.5),vy:MATH.random(-0.1,0.6),vz:MATH.random(-0.5,0.5),grav:-0.1,size:MATH.random(100,250),col:[0.15,0.4,0.9],life:MATH.random(35,55)})
+            ParticleRenderer.add({x:x+MATH.random(-3, 3),y:y+MATH.random(-3, 3),z:z+MATH.random(-3, 3),vx:MATH.random(-0.5,0.5),vy:MATH.random(-0.1,0.6),vz:MATH.random(-0.5,0.5),grav:-0.1,size:MATH.random(100,250),col:[0.15,0.4,0.9],life:MATH.random(35,55)})
         }
         
         physicsWorld.removeBody(this.body)
@@ -7718,9 +7621,6 @@ scenes.play=function(){
                         user.mouseButton=e.button
                     }
                     player.dead=false
-                    player.gunAmmo=5
-                    player.shotgunAmmo=2
-                    player.revolverAmmo=6
                     player.currentWeapon='hand'
                 }
             }
@@ -7855,9 +7755,6 @@ scenes.play=function(){
                     user.mouseButton=e.button
                 }
                 player.dead=false
-                player.gunAmmo=5
-                player.shotgunAmmo=2
-                player.revolverAmmo=6
                 player.currentWeapon='hand'
             }
         }
@@ -8176,9 +8073,6 @@ scenes.play=function(){
                 
                 setLevel(currentLevel)
                 player.dead=false
-                player.gunAmmo=5
-                player.shotgunAmmo=2
-                player.revolverAmmo=6
                 currentScene='play'
                 uiCanvas.requestPointerLock()
                 ctx.strokeStyle='black'
@@ -8210,9 +8104,6 @@ scenes.play=function(){
                     user.mouseButton=e.button
                 }
                 player.dead=false
-                player.gunAmmo=5
-                player.shotgunAmmo=2
-                player.revolverAmmo=6
                 player.currentWeapon='hand'
             }
         }
