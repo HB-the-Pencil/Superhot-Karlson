@@ -2406,6 +2406,10 @@ let player=(function(out){
     out.soundTimer=0
     out.soundPos=[]
     
+    out.message=false
+    out.messageTimer=0
+    out.qMessages=[]
+    
     out.addSound=(sound,pos,cooldown,volume)=>{
         
         if(frameCount%cooldown!==0&&cooldown){return}
@@ -2413,6 +2417,14 @@ let player=(function(out){
         out.sound=sound
         out.soundTimer=volume
         out.soundPos=pos
+    }
+    
+    out.addMessage=(message,pos,cooldown,volume)=>{
+        
+        if(frameCount%cooldown!==0&&cooldown){return}
+        
+        out.message=message
+        out.messageTimer=3
     }
     
     out.sunFlareSample=new Uint8Array(4)
@@ -6188,6 +6200,8 @@ class PhysicsBouncyBall {
     
     update(dt){
         
+        player.currentWeapon='hand'
+        
         this.timer-=dt
         
         if(this.timer<0){
@@ -6474,24 +6488,19 @@ function setLevel(level){
         
         case 1:
             
-            addBoard(0,0.25,13,10,0,0)
-            addBoard(0,0.25,0,10,0,1)
-            addBoard(45.656,0.25,5,10,180,2)
-            addBoard(15,0.25,-29,10,292,5)
-            addBoard(0,-7,15,10,0,7)
+            player.qMessages=['','TIME','MOVES','ONLY','WHEN','YOU','MOVE']
             
         break
         
         case 2:
             
-            addBoard(0,0,15,10,0,3)
-            addBoard(-16,20,7,10,90,4)
+            player.qMessages=['','JUMP','AND','RUN','TO','WALLJUMP','','','','','','','','BREAK','THE','GLASS']
             
         break
         
         case 3:
             
-            addBoard(0,0,15,10,0,6)
+            player.qMessages=['','SHIFT','TO','CROUCH','OR','SLIDE']
             
         break
         
@@ -8302,6 +8311,26 @@ scenes.play=function(){
             player.sound=false
         }
     }
+    
+    ctx.shadowColor='rgb(72, 139, 168,0.8)'
+        ctx.fillStyle='rgb(255,255,255,'+player.messageTimer*0.3+')'
+        ctx.font='bold 110px arial'
+        
+        ctx.fillText(player.message,300,150)
+        ctx.shadowColor='rgb(0,0,0,0)'
+        
+        if (player.messageTimer < 0 && player.qMessages.length>1) {
+            player.messageTimer = 15
+            player.qMessages.splice(0,1)
+        }
+        player.message=player.qMessages[0]
+        
+        player.messageTimer-=0.3
+        
+        if(player.messageTimer<=0){
+            
+            player.message=false
+        }
     
 }
 
