@@ -2422,7 +2422,7 @@ let player=(function(out){
     out.friction=0.95
     out.crouch_friction=0.35
     out.airResistance=0.125
-    out.crouch_airResistance=0
+    out.crouch_airResistance=0.075
     out.jumpPower=2.8
     out.timeMultiplier=1
     out.timeTimer=0
@@ -2483,7 +2483,7 @@ let player=(function(out){
         
         if (player.wallDash === true) {
         
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['a']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys['a']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2510,7 +2510,7 @@ let player=(function(out){
                 out.airResistance = 0.125
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['d']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys['d']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2541,7 +2541,7 @@ let player=(function(out){
         
         else {
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['a'] && !user.keys[' ']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys['a'] && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -2568,7 +2568,7 @@ let player=(function(out){
                 out.airResistance = 0.125
             }
             
-            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && user.keys.w && user.keys['d'] && !user.keys[' ']){
+            if(hitBody.collisionFilterGroup===STATIC_PHYSICS_GROUP && !hitBody.fixedRotation && Math.abs(e.contact.ni.y)<0.01 && user.keys.w && user.keys['d'] && !user.keys[' ']){
                 
                 player.addSound('Epic wallrun noises',false,false,15)
                 
@@ -7387,7 +7387,7 @@ scenes.options=function(){
         ctx.fill()
     }
     //!!!
-    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;backgroundColor=(player.useBloom?[0.8,0.8,0.8,1]:[0.95,0.95,0.95,1]);player.useSSAO=false;player.lensFlare=false;}
+    if(user.mouseClicked&&button_center(user.mouseX,user.mouseY,150,400-40,60,30)){player.useBloom=!player.useBloom;player.useSSAO=false;player.lensFlare=false;}
     
     ctx.fillStyle=player.useBloom?'white':'rgb(100,100,100)'
     ctx.beginPath()
