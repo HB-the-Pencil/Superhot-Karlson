@@ -4863,7 +4863,7 @@ class RagdollPhysicsBox {
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
             quaternion:new CANNON.Quaternion(...quat.fromEuler([],...(params.rot||[0,0,0]))),
-            mass:params.mass||2,
+            mass:params.mass||16,
             shape:new CANNON.Box(new CANNON.Vec3(this.size[0]*0.5,this.size[1]*0.5,this.size[2]*0.5)),
             angularDamping:0.5,
             collisionFilterGroup:DYNAMIC_PHYSICS_GROUP,
@@ -4900,7 +4900,7 @@ class RagdollPhysicsSphere {
         this.body=new CANNON.Body({
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
-            mass:params.mass||2,
+            mass:params.mass||16,
             shape:new CANNON.Sphere(this.radius),
             angularDamping:0.8,
             collisionFilterGroup:DYNAMIC_PHYSICS_GROUP,
@@ -5131,7 +5131,7 @@ class PhysicsEnemy {
         this.body=new CANNON.Body({
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
-            mass:8,
+            mass:16,
             shape:new CANNON.Box(new CANNON.Vec3(_size[0]*0.5,_size[1]*0.5,_size[2]*0.5)),
             collisionFilterGroup:ENEMY_PHYSICS_GROUP,
             collisionFilterMask:PLAYER_PHYSICS_GROUP|STATIC_PHYSICS_GROUP|DYNAMIC_PHYSICS_GROUP|ENEMY_PHYSICS_GROUP,
@@ -5381,7 +5381,7 @@ class PhysicsBarrel {
     
     die(index){
         
-        player.timeTimer=7.5
+        //player.timeTimer=7.5
         
         let px=this.body.position.x,
             py=this.body.position.y,
@@ -6148,7 +6148,7 @@ class PhysicsBouncyBall {
             collisionFilterMask:PLAYER_PHYSICS_GROUP|STATIC_PHYSICS_GROUP|DYNAMIC_PHYSICS_GROUP|ENEMY_PHYSICS_GROUP,
             material:bouncyMaterial,
             sleepSpeedLimit:0.025,
-            sleepTimeLimit:5
+            sleepTimeLimit:1
         })
         
         let p=this.body.position
