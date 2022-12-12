@@ -2410,6 +2410,8 @@ let player=(function(out){
     out.messageTimer=0
     out.qMessages=[]
     
+    out.hasBeaten=false
+    
     out.addSound=(sound,pos,cooldown,volume)=>{
         
         if(frameCount%cooldown!==0&&cooldown){return}
@@ -4246,8 +4248,6 @@ let user=(function(out){
     out.mousePressed=out.mouseClicked=false
     out.keys=out.clickedKeys={}
     
-    out.hasBeaten=false
-    
     out.update=function(){
         
         out.pressing_use=out.keys.j||out.mousePressed&&user.mouseButton===0
@@ -4875,7 +4875,7 @@ class RagdollPhysicsBox {
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
             quaternion:new CANNON.Quaternion(...quat.fromEuler([],...(params.rot||[0,0,0]))),
-            mass:params.mass||16,
+            mass:params.mass||10,
             shape:new CANNON.Box(new CANNON.Vec3(this.size[0]*0.5,this.size[1]*0.5,this.size[2]*0.5)),
             angularDamping:0.5,
             collisionFilterGroup:DYNAMIC_PHYSICS_GROUP,
@@ -4912,7 +4912,7 @@ class RagdollPhysicsSphere {
         this.body=new CANNON.Body({
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
-            mass:params.mass||16,
+            mass:params.mass||10,
             shape:new CANNON.Sphere(this.radius),
             angularDamping:0.8,
             collisionFilterGroup:DYNAMIC_PHYSICS_GROUP,
@@ -5134,7 +5134,7 @@ class PhysicsEnemy {
         this.shootTarget=new CANNON.Vec3()
         
         this.mesh=meshes.enemy
-        let _size=[1.5,3.75,1.5]
+        let _size=[1.35,3.65,1.35]
         
         this.timer=0
         this.weapon=params.weapon
@@ -5143,7 +5143,7 @@ class PhysicsEnemy {
         this.body=new CANNON.Body({
             
             position:new CANNON.Vec3(params.pos[0],params.pos[1],params.pos[2]),
-            mass:16,
+            mass:10,
             shape:new CANNON.Box(new CANNON.Vec3(_size[0]*0.5,_size[1]*0.5,_size[2]*0.5)),
             collisionFilterGroup:ENEMY_PHYSICS_GROUP,
             collisionFilterMask:PLAYER_PHYSICS_GROUP|STATIC_PHYSICS_GROUP|DYNAMIC_PHYSICS_GROUP|ENEMY_PHYSICS_GROUP,
@@ -5756,7 +5756,7 @@ class PhysicsBeam {
             if(result.hasHit && result.body.collisionFilterGroup===ENEMY_PHYSICS_GROUP) {
                 
                 player.body.position.x = this.pos[0]
-                player.body.position.y = this.pos[1]+2
+                player.body.position.y = this.pos[1]+1
                 player.body.position.z = this.pos[2]
                 
             }
@@ -5785,7 +5785,7 @@ class PhysicsBeam {
                                 
                                 ParticleRenderer.add({
                                     
-                                    x:x+MATH.random(-2,2),y:y,z:z+MATH.random(-2,2),vx:0,vy:MATH.random(-0.2,0.2),vz:0,size:MATH.random(30,140),life:MATH.random(30,70),col:MATH.HSBToRGB(Math.random()*255,255,100),grav:0 
+                                    x:x+MATH.random(-1,1),y:y+1,z:z+MATH.random(-1,1),vx:MATH.random(-0.1,0.1),vy:MATH.random(-0.2,0.2),vz:MATH.random(-0.1,0.1),size:MATH.random(30,140),life:MATH.random(30,70),col:[0.5,0.1,0],grav:-0.02 
                                 })
                             }
                             
@@ -5816,13 +5816,19 @@ class PhysicsBeam {
         
         ParticleRenderer.add({
             
-            x:p[0],y:p[1],z:p[2],vx:MATH.random(-0.1,0.1),vy:MATH.random(-0.1,0.1),vz:MATH.random(-0.1,0.1),size:MATH.random(30,90),life:MATH.random(20,40),col:MATH.HSBToRGB((r*10*this.dist)%255,255,255),grav:0
+            x:p[0],y:p[1],z:p[2],vx:MATH.random(-0.05,0.05),vy:MATH.random(-0.05,0.05),vz:MATH.random(-0.05,0.05),size:MATH.random(30,90),life:MATH.random(20,40),col:[0.1,0.2,0.3],grav:0
             
         })
         
         ParticleRenderer.add({
             
-            x:p[0],y:p[1],z:p[2],vx:MATH.random(-0.1,0.1),vy:MATH.random(-0.1,0.1),vz:MATH.random(-0.1,0.1),size:MATH.random(30,90),life:MATH.random(20,40),col:MATH.HSBToRGB((r*10*this.dist)%255,255,255),grav:0
+            x:p[0],y:p[1],z:p[2],vx:MATH.random(-0.01,0.01),vy:MATH.random(-0.01,0.01),vz:MATH.random(-0.01,0.01),size:MATH.random(30,90),life:MATH.random(20,40),col:[0.1,0.2,0.3],grav:0
+            
+        })
+        
+        ParticleRenderer.add({
+            
+            x:p[0],y:p[1],z:p[2],vx:MATH.random(-0.01,0.01),vy:MATH.random(-0.01,0.01),vz:MATH.random(-0.01,0.01),size:MATH.random(30,90),life:MATH.random(20,40),col:[0.1,0.2,0.3],grav:0
             
         })
         
@@ -6715,17 +6721,13 @@ function initTitleScreen(){
 initTitleScreen()
 
 let titleScreenVignetteGradient=ctx.createRadialGradient(300,300,0,300,300,300)
-
-if (user.hasBeaten === true) {
-    titleScreenVignetteGradient.addColorStop(1,'rgba(110, 110, 110,0.4)')
-    titleScreenVignetteGradient.addColorStop(0,'rgba(255, 41, 41,0.2)')
-}
-
-else {
+let titleScreenVignetteGradient2=ctx.createRadialGradient(300,300,0,300,300,300)
+    titleScreenVignetteGradient2.addColorStop(1,'rgba(255, 0, 0,0.4)')
+    titleScreenVignetteGradient2.addColorStop(0,'rgba(176, 65, 65,0.1)')
+    
     titleScreenVignetteGradient.addColorStop(1,'rgba(159, 219, 242,0.4)')
     titleScreenVignetteGradient.addColorStop(0,'rgba(255, 255, 255,0)')
-}
-
+    
 let levelCreatorGradient=ctx.createLinearGradient(0,0,600,0)
 
 levelCreatorGradient.addColorStop(440/600,'rgb(0,0,0,0)')
@@ -6847,8 +6849,15 @@ scenes.title=function(){
         ctx.drawImage(gl.canvas,0,0)
     }
     
-    ctx.fillStyle=titleScreenVignetteGradient
-    ctx.fillRect(0,0,600,600)
+    if(player.hasBeaten) {
+        ctx.fillStyle=titleScreenVignetteGradient2
+        ctx.fillRect(0,0,600,600)
+    }
+    
+    else {
+        ctx.fillStyle=titleScreenVignetteGradient
+        ctx.fillRect(0,0,600,600)
+    }
     
     ctx.lineWidth=3.5
     ctx.strokeStyle='rgb(255,0,0)'
@@ -7119,8 +7128,14 @@ scenes.levelSelect=function(){
         ctx.drawImage(gl.canvas,0,0)
     }
     
-    ctx.fillStyle=titleScreenVignetteGradient
-    ctx.fillRect(0,0,600,600)
+    if(player.hasBeaten) {
+        ctx.fillStyle=titleScreenVignetteGradient2
+        ctx.fillRect(0,0,600,600)
+    }
+    else {
+        ctx.fillStyle=titleScreenVignetteGradient
+        ctx.fillRect(0,0,600,600)
+    }
     
     ctx.lineWidth=3.5
     ctx.strokeStyle='rgb(255,0,0)'
@@ -7315,8 +7330,14 @@ scenes.options=function(){
         ctx.drawImage(gl.canvas,0,0)
     }
     
-    ctx.fillStyle=titleScreenVignetteGradient
-    ctx.fillRect(0,0,600,600)
+    if(player.hasBeaten) {
+        ctx.fillStyle=titleScreenVignetteGradient2
+        ctx.fillRect(0,0,600,600)
+    }
+    else {
+        ctx.fillStyle=titleScreenVignetteGradient
+        ctx.fillRect(0,0,600,600)
+    }
     ctx.fillStyle='rgba(0,0,0,0.5)'
     ctx.fillRect(0,0,600,600)
     
@@ -7559,7 +7580,7 @@ gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(skyIndex),gl.STATIC_DRAW)
 
 scenes.play=function(){
     
-    if(MATH.manhattanDist_milk()<5){
+    if(MATH.manhattanDist_milk()<2.5){
         
         if(currentLevel===24){
             
@@ -7568,7 +7589,7 @@ scenes.play=function(){
             currentScene='title'
             document.exitPointerLock()
             
-            user.hasBeaten = true
+            player.hasBeaten=true
             uiCanvas.onmousemove=function(e){
                 
                 user.mouseX=e.x
@@ -7608,8 +7629,14 @@ scenes.play=function(){
             
             document.exitPointerLock()
             
-            ctx.fillStyle=titleScreenVignetteGradient
-            ctx.fillRect(0,0,600,600)
+            if(player.hasBeaten) {
+                ctx.fillStyle=titleScreenVignetteGradient2
+                ctx.fillRect(0,0,600,600)
+            }
+            else {
+                ctx.fillStyle=titleScreenVignetteGradient
+                ctx.fillRect(0,0,600,600)
+            }
             ctx.font='bold 50px monospace'
             ctx.strokeStyle='rgb(255,0,0)'
             ctx.lineWidth=3
@@ -7744,8 +7771,14 @@ scenes.play=function(){
         
         document.exitPointerLock()
         
-        ctx.fillStyle=titleScreenVignetteGradient
-        ctx.fillRect(0,0,600,600)
+        if(player.hasBeaten) {
+            ctx.fillStyle=titleScreenVignetteGradient2
+            ctx.fillRect(0,0,600,600)
+        }
+        else {
+            ctx.fillStyle=titleScreenVignetteGradient
+            ctx.fillRect(0,0,600,600)
+        }
         ctx.font='bold 50px monospace'
         ctx.strokeStyle='rgb(255,0,0)'
         ctx.lineWidth=3
@@ -8142,8 +8175,14 @@ scenes.play=function(){
         player.currentWeapon='hand'
         document.exitPointerLock()
         
-        ctx.fillStyle=titleScreenVignetteGradient
-        ctx.fillRect(0,0,600,600)
+        if(player.hasBeaten) {
+            ctx.fillStyle=titleScreenVignetteGradient2
+            ctx.fillRect(0,0,600,600)
+        }
+        else {
+            ctx.fillStyle=titleScreenVignetteGradient
+            ctx.fillRect(0,0,600,600)
+        }
         ctx.font='bold 50px monospace'
         ctx.strokeStyle='rgb(255,0,0)'
         ctx.lineWidth=3
@@ -8325,12 +8364,17 @@ scenes.play=function(){
         }
         player.message=player.qMessages[0]
         
-        player.messageTimer-=0.3
+        player.messageTimer-=0.625
         
         if(player.messageTimer<=0){
             
             player.message=false
         }
+        
+    if(player.hasBeaten) {
+        ctx.fillStyle=titleScreenVignetteGradient2
+        ctx.fillRect(0,0,600,600)
+    }
     
 }
 
